@@ -1,0 +1,25 @@
+FROM rust:1.94-alpine AS build-helix
+
+ENV HELIX_DISABLE_AUTO_GRAMMAR_BUILD=1
+ENV RUSTFLAGS="-C target-cpu=native"
+ENV url="https://github.com/helix-editor/helix.git"
+ENV version="25.07.1"
+
+WORKDIR /manifest
+
+RUN apk add --no-cache \
+    git \
+    file \
+    && git clone --branch "${version}" --single-branch --depth 1 "${url}" . \
+    && rm -r .cargo/ \
+    && cargo fetch --locked \
+    && cargo build \
+    --frozen \
+    --package helix-term \
+    --profile opt \
+    --verbose \
+    && file target/opt/hx  2>&1 | grep -q 'static-pie linked'
+
+FROM scratch AS helix
+WORKDIR /bin/
+COPY --from=build-helix /manifest/target/opt/hx .
