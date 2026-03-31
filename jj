@@ -1,0 +1,19 @@
+FROM rust:1.94-alpine AS build-jj
+
+ENV RUSTFLAGS="-C target-cpu=native"
+ENV url="https://github.com/jj-vcs/jj.git"
+ENV version="v0.39.0"
+
+WORKDIR /manifest
+
+RUN apk add --no-cache \
+    git \
+    file \
+    && git clone --branch "${version}" --single-branch --depth 1 "${url}" . \
+    && cargo fetch --locked \
+    && cargo build --frozen --release --verbose \
+    && file target/release/jj  2>&1 | grep -q 'static-pie linked'
+
+FROM scratch AS jj
+WORKDIR /bin
+COPY --from=build-jj /manifest/target/release/jj .
