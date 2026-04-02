@@ -1,7 +1,7 @@
 FROM rust:1.94-alpine AS build-jj
 
 ENV url="https://github.com/jj-vcs/jj.git"
-ENV version="v0.39.0"
+ENV version="v0.40.0"
 
 WORKDIR /manifest
 
