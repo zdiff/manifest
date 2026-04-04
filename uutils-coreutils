@@ -1,14 +1,9 @@
-FROM rust:1.94-alpine AS build-uutils-coreutils
+FROM manifest-base AS build-uutils-coreutils
 
 ENV url="https://github.com/uutils/coreutils.git"
 ENV version="0.6.0"
 
-WORKDIR /manifest
-
-RUN apk add --no-cache \
-    git \
-    file \
-    && git clone --branch "${version}" --single-branch --depth 1 "${url}" . \
+RUN git clone --branch "${version}" --single-branch --depth 1 "${url}" . \
     && cargo fetch --locked \
     && cargo build \
     -p uu_arch \
@@ -123,5 +118,5 @@ RUN apk add --no-cache \
     && file bin/* 2>&1 | grep -q 'static-pie linked'
 
 FROM scratch AS uutils-coreutils
-WORKDIR /bin/
+WORKDIR /bin
 COPY --from=build-uutils-coreutils /manifest/bin/ .

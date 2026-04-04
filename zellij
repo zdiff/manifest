@@ -1,14 +1,10 @@
-FROM rust:1.94-alpine AS build-zellij
+FROM manifest-base AS build-zellij
 
 ENV url="https://github.com/zellij-org/zellij.git"
 ENV version="v0.43.1"
 ENV OPENSSL_NO_VENDOR=1
 
-WORKDIR /manifest
-
 RUN apk add --no-cache \
-    file \
-    git \
     openssl-dev \
     openssl-libs-static \
     && git clone --branch "${version}" --single-branch --depth 1 "${url}" . \
@@ -17,5 +13,5 @@ RUN apk add --no-cache \
     && file target/release/zellij  2>&1 | grep -q 'static-pie linked'
 
 FROM scratch AS zellij
-WORKDIR /bin/
+WORKDIR /bin
 COPY --from=build-zellij /manifest/target/release/zellij .
