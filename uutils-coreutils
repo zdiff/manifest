@@ -1,7 +1,7 @@
 FROM manifest-base AS build-uutils-coreutils
 
 ENV url="https://github.com/uutils/coreutils.git"
-ENV version="0.7.0"
+ENV version="0.8.0"
 
 RUN git clone --branch "${version}" --single-branch --depth 1 "${url}" . \
     && cargo fetch --locked \
