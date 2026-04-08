@@ -2,7 +2,7 @@ FROM manifest-base AS build-alacritty
 
 ENV PKG_CONFIG_ALL_STATIC=1
 ENV url="https://github.com/alacritty/alacritty.git"
-ENV version="v0.16.1"
+ENV version="v0.17.0"
 
 RUN apk add --no-cache \
     brotli-dev \
