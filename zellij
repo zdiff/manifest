@@ -1,7 +1,7 @@
 FROM manifest-base AS build-zellij
 
 ENV url="https://github.com/zellij-org/zellij.git"
-ENV version="v0.44.0"
+ENV version="v0.44.1"
 ENV OPENSSL_NO_VENDOR=1
 
 RUN apk add --no-cache \
