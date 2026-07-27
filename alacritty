@@ -26,6 +26,7 @@ RUN apk add --no-cache \
     zlib-static \
     && git clone --branch "${version}" --single-branch --depth 1 "${url}" . \
     && cargo fetch --locked \
+    && cargo test --frozen --workspace \
     && cargo build --frozen --release --verbose \
     && file target/release/alacritty  2>&1 | grep -q 'static-pie linked'
 
