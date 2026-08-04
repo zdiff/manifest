@@ -1,0 +1,20 @@
+FROM manifest-base AS build-uutils-findutils
+
+ENV url="https://github.com/uutils/findutils.git"
+ENV version="0.10.0"
+
+RUN git clone --branch "${version}" --single-branch --depth 1 "${url}" . \
+    && cargo fetch --locked \
+    && cargo build --frozen --release --verbose \
+    && mkdir bin \
+    && mv target/release/find \
+    target/release/locate \
+    target/release/testing-commandline \
+    target/release/updatedb \
+    target/release/xargs \
+    bin/ \
+    && file bin/* 2>&1 | grep -q 'static-pie linked'
+
+FROM scratch AS uutils-findutils
+WORKDIR /bin
+COPY --from=build-uutils-findutils /manifest/bin/ .
