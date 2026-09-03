@@ -1,7 +1,7 @@
 FROM manifest-base AS build-jj
 
 ENV url="https://github.com/jj-vcs/jj.git"
-ENV version="v0.44.0"
+ENV version="v0.45.0"
 
 RUN git clone --branch "${version}" --single-branch --depth 1 "${url}" . \
     && cargo fetch --locked \
